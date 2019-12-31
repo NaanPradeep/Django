@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container padding">
+	<h1>Your orders:</h1>
+	<div class="column padding mt-4">
+		{% if object %}
+			{% for order_item in object_item %}
+			<div class="d-flex row wow fadeIn text-left">
+				<div class="col-sm-2 text-right">
+					<img class="" style="width: 120px; height: 200" src="{{ order_item.item.image.url }}">
+				</div>	
+				<div class="col-sm-2 ml-2 text-left align-item-center">
+					<h5>{{ order_item.item.title }}</h5>
+					<p><strong>Quantity: {{ order_item.quantity }}</strong></p>
+					<a href="" class="btn btn-primary">Buy Again</a>
+				</div>
+			</div>
+			<hr>
+			{% endfor %}
+		{% else %}
+			<h2>You dont have any orders</h2>
+		{% endif %}
+		</div>
+	</div>
+{% endblock %}

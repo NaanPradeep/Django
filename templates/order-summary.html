@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <!-- Navbar -->
+  <!--Main layout-->
+  <main>
+    <div class="container">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Item Name</th>
+              <th scope="col">Item Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for order_item in object.items.all %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ order_item.item.title }}</td>
+              
+              {% if order_item.item.discounted_price %}
+                <td>₹ {{ order_item.item.discounted_price }}</td>
+                <td><a href="{% url 'core:add_single_item_to_cart' order_item.item.slug %}"><i class="far fa-plus-square mr-3"></i></a>{{ order_item.quantity }}
+                  <a href="{% url 'core:remove_single_item_from_cart' order_item.item.slug %}"><i class="far fa-minus-square ml-3"></i></a></td>
+                <td>₹ {{ order_item.get_total_discounted_item_price }}</td>
+              {% else %}
+                <td>₹ {{ order_item.item.price }}</td>
+                <td><a href="{% url 'core:add_single_item_to_cart' order_item.item.slug %}"><i class="far fa-plus-square mr-3"></i></a>{{ order_item.quantity }}
+                  <a href="{% url 'core:remove_single_item_from_cart' order_item.item.slug %}"><i class="far fa-minus-square ml-3"></i></a></td>
+                <td>₹ {{ order_item.get_total_item_price }}</td>
+              {% endif %}
+                <td>
+                  <a style="color: red" href="{% url 'core:remove_from_cart' order_item.item.slug %}"><i class="far fa-trash-alt"></i></a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr class="text-center">
+                <td colspan="5">Your cart is empty</td>
+              </tr>
+              <tr>
+            <td colspan="5">
+              <a class="btn btn-default float-right text-dark" href="{% url 'core:home-view' %}">Continue Shopping</a>
+            </td>
+          </tr>
+          {% endfor %}
+          {% if object.get_final_total_bill %}
+          <tr>
+            <td colspan="4"><b>Order Total</b></td>
+            <td colspan="5"><b>₹ {{ object.get_final_total_bill }}</b></td>
+          </tr>
+          <tr>
+            <td colspan="4"><b>Your Savings</b></td>
+            <td colspan="5"><b>₹ {{ object.get_final_total_savings }}</b></td>
+          </tr>
+          <tr class="col-sm-4">
+            <td colspan="5">
+              <a class="btn btn-default float-right text-dark" href="{% url 'core:home-view' %}">Continue Shopping</a>
+              <a class="btn btn-warning float-right mr-2 text-dark" href="{% url 'core:checkout-view' %}">Proceed to Checkout</a>
+            </td>
+          </tr>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <!--Main layout-->
+{% endblock %}
